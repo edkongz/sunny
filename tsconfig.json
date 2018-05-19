@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "lib": ["es6"],
+    "outDir": "lib",
+    "types": [
+      "node",
+      "cors"
+    ],
+    "module": "commonjs"
+  }
+}
