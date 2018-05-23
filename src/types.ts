@@ -13,6 +13,7 @@ export interface Route {
 export interface RouteOptions {
   description?: string;
   auth?: false | string;
+  cors?: false | any;
   tags?: string[];
   validate: {
     params: any;
@@ -34,6 +35,8 @@ export interface Plugin {
   ################################################################*/
 export interface RoutesDefaults {
   prefix: string;
+  cors: false | any;
+  auth: false | string;
 }
 
 /*################################################################
