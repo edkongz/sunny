@@ -10,4 +10,3 @@
 * Lifecycle
 * [CORS](untitled-2.md)
 * [Performance](performance.md)
-
