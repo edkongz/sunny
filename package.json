@@ -4,6 +4,7 @@
   "description": "Hapi inspired server framework",
   "main": "index.js",
   "scripts": {
+    "develop": "tsc --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -23,6 +24,7 @@
     "body-parser": "^1.18.2",
     "cors": "^2.8.4",
     "express": "^4.16.3",
+    "js-yaml": "^3.11.0",
     "ramda": "^0.25.0"
   },
   "devDependencies": {

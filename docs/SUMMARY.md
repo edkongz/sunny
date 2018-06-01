@@ -10,3 +10,7 @@
 * Lifecycle
 * [CORS](untitled-2.md)
 * [Performance](performance.md)
+* [Reference](docs/api.md)
+  * [Server](docs/api-server.md)
+  * [Manifest]()
+  * [CLI]()

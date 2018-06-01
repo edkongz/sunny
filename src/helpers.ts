@@ -1,9 +1,9 @@
-import R from "ramda";
+const R = require("ramda");
 
 /*---------------------------------------------------------------
   noop request
   ---------------------------------------------------------------*/
-const noop = (request, reply, next) => next();
+export const noop = () => (request, reply, next) => next();
 
 /*---------------------------------------------------------------
   reject and reduce a list of arguments
@@ -15,5 +15,5 @@ export const merge = reduce(R.mergeDeepRight, {});
 export const concat = reduce(R.concat, []);
 
 /*---------------------------------------------------------------
-  
+  Resolvers 
   ---------------------------------------------------------------*/

@@ -43,20 +43,12 @@ export interface RoutesDefaults {
   Scheme
   ################################################################*/
 export interface Scheme {
-  server: SchemeServer;
-  defaults: SchemeDefaults;
-  auth: SchemeAuth[];
+  routes: RoutesDefaults;
   plugins: SchemePlugins[];
 }
 
-export interface SchemeServer {
-  address: string;
-  port: number;
-  cors: false;
-}
 
 export interface SchemeDefaults {
-  auth: false | string;
   routes: RoutesDefaults;
 }
 
@@ -65,7 +57,7 @@ export interface SchemeAuth {
 }
 
 export interface SchemePlugins {
-  plugin: string | Plugin;
+  plugin: string; 
   options: any;
 }
 

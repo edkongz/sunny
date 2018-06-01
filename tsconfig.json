@@ -6,6 +6,7 @@
       "node",
       "cors"
     ],
-    "module": "commonjs"
+    "module": "commonjs",
+    "moduleResolution": "node"
   }
 }
