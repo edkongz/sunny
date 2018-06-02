@@ -1,7 +1,10 @@
+import { BadRequest } from './kaboom';
 import * as R from "ramda";
 import * as cors from "cors";
+import * as Boom from "boom";
 import * as bodyParser from "body-parser";
 import { RoutesDefaults, Route } from "./types";
+import { errorHandler } from './errors';
 import { noop } from "./helpers";
 
 /*################################################################
@@ -23,7 +26,8 @@ export const registerFactory = (
       serverApp[method(route)](
         path(route),
         ...middleware(route),
-        route.handler
+        route.handler,
+        errorHandler,
       );
     },
 
@@ -108,7 +112,8 @@ const validateBody = route => {
       : validator(input);
 
     if (isValid(results)) return next();
-    throw Error("SHit went pear shpaed");
+    // throw Boom.badRequest(null, results.error.details)
+    return BadRequest({payload: results.error.details})
   };
 };
 
