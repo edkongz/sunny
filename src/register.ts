@@ -1,5 +1,8 @@
+import * as R from "ramda";
+import * as cors from "cors";
+import * as bodyParser from "body-parser";
 import { RoutesDefaults, Route } from "./types";
-const R = require("ramda");
+import { noop } from "./helpers";
 
 /*################################################################
   Register Factory
@@ -45,10 +48,14 @@ export const registerFactory = (
   ---------------------------------------------------------------*/
 const middlewareFactory = (pluginOptions, serverRoutes, serverAuth) => {
   const resolvers = [
+    () => bodyParser.json(),
     corsFactory(pluginOptions, serverRoutes),
-    authFactory(serverAuth, pluginOptions, serverRoutes)
+    authFactory(serverAuth, pluginOptions, serverRoutes),
+    validateBody,
+    validateQuery,
+    validateParams
   ];
-  return route => resolvers.map(fn => fn(route));
+  return route => resolvers.map(fn => fn(route)).filter(fn => fn !== null);
 };
 
 /*---------------------------------------------------------------
@@ -69,14 +76,9 @@ const corsFactory = (pluginOptions, serverRoutes) => route => {
     otherwise
   ]);
 
-  switch (true) {
-    case result === true:
-      return noop();
-    case result === false:
-      return noop();
-    default:
-      return cors(result);
-  }
+  if (result === true) return noop();
+  if (result === false) return noop();
+  return cors(result);
 };
 
 /*---------------------------------------------------------------
@@ -85,11 +87,61 @@ const corsFactory = (pluginOptions, serverRoutes) => route => {
 const authFactory = (serverAuth, pluginOptions, serverRoutes) => route => {
   const otherwise = serverRoutes.auth;
   const result = R.find(hasValue, [
-    R.path(["optiosn", "auth"], route),
+    R.path(["options", "auth"], route),
     R.path(["routes", "auth"], pluginOptions),
     otherwise
   ]);
-  return result === false ? noop() : serverAuth[result].authenticate;
+  if (result === false) return null;
+  if (serverAuth[result]) return serverAuth[result];
+  throw Error("Auth method doesn't exist");
+};
+
+/*---------------------------------------------------------------
+  Validate Body 
+  ---------------------------------------------------------------*/
+const validateBody = route => {
+  const validator = R.path(["options", "validate", "body"], route);
+  return (request, reply, next) => {
+    const input = request.body;
+    const results = validator.isJoi
+      ? require("joi").validate(input, validator)
+      : validator(input);
+
+    if (isValid(results)) return next();
+    throw Error("SHit went pear shpaed");
+  };
+};
+
+/*---------------------------------------------------------------
+  Validate Query
+  ---------------------------------------------------------------*/
+const validateQuery = route => {
+  const validator = R.path(["options", "validate", "query"], route);
+  if (!validator) return null;
+  return (request, reply, next) => {
+    const input = request.query;
+    const results = validator.isJoi
+      ? require("joi").validate(input, validator)
+      : validator(input);
+    if (isValid(results)) return next();
+    throw Error("SHit went pear shpaed");
+  };
+};
+
+/*---------------------------------------------------------------
+  Validate Params
+  ---------------------------------------------------------------*/
+const validateParams = route => {
+  const validator = R.path(["options", "validate", "params"], route);
+  if (!validator) return null;
+  return (request, reply, next) => {
+    const input = request.params;
+    const results = validator.isJoi
+      ? require("joi").validate(input, validator)
+      : validator(input);
+    if (isValid(results)) return next();
+    throw Error("SHit went pear shpaed");
+  };
 };
 
 /*################################################################
@@ -97,4 +149,5 @@ const authFactory = (serverAuth, pluginOptions, serverRoutes) => route => {
   ################################################################*/
 const prefixOr = R.pathOr("", ["routes", "prefix"]);
 const hasValue = R.complement(R.isNil);
-const method = R.pipe(R.prop("method"), R.toLowerCase);
+const method = R.pipe(R.prop("method"), R.toLower);
+const isValid = R.anyPass([R.equals(true), R.propEq("error", null)]);

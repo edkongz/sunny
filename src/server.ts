@@ -17,7 +17,6 @@ const bodyParser = require("body-parser");
 const defaults = require("./defaults");
 const { merge, concat } = require("./helpers");
 const { loadManifest } = require("./manifest");
-// const resolvers = require("./resolvers");
 
 /*################################################################
   Server Factory
@@ -38,7 +37,7 @@ export function Server() {
     Plugins
     ---------------------------------------------------------------*/
   plugins.forEach(({ plugin, options }) => {
-    require(path.relative(process.cwd(), plugin)).register(
+    require(path.join(process.cwd(), plugin)).register(
       register(options),
       options
     );

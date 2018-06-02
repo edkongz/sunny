@@ -1,2 +1,6 @@
+routes:
+  auth: "basic" 
+  cors: false
+
 plugins:
-  - plugin: "./plugin.js"
+- plugin: "./plugin.js"

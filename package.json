@@ -28,6 +28,7 @@
     "ramda": "^0.25.0"
   },
   "devDependencies": {
+    "joi": "^13.3.0",
     "typescript": "^2.8.3"
   }
 }
