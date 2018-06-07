@@ -6,42 +6,50 @@ import {
   Scheme,
   SchemeAuth,
   SchemePlugins,
-  Plugin
+  Plugin,
+  ServerOptions
 } from "./types";
 
-const R = require("ramda");
-const path = require("path");
-const express = require("express");
-const cors = require("cors");
-const bodyParser = require("body-parser");
-const defaults = require("./defaults");
-const { merge, concat } = require("./helpers");
-const { loadManifest } = require("./manifest");
+import * as R from "ramda";
+import * as path from "path";
+import * as express from "express";
+import * as cors from "cors";
+import * as bodyParser from "body-parser";
+import * as defaults from "./defaults";
+import { merge, concat } from "./helpers";
+import { loadManifest } from "./manifest";
 
 /*################################################################
   Server Factory
   ################################################################*/
-export function Server() {
-  const { plugins, ...manifest }: Partial<Manifest> = loadManifest();
+export function Server(options: Partial<ServerOptions>) {
+  const manifest: Partial<Manifest> = options.manifest || loadManifest();
+
   const app = express();
+  app.disable("x-powered-by");
 
   const auth = {};
   const routes = merge(defaults.scheme.routes, manifest.routes);
 
   /*---------------------------------------------------------------
-    Register plugin factory
+    Register factory
     ---------------------------------------------------------------*/
   const register = registerFactory(routes, auth, app);
 
   /*---------------------------------------------------------------
     Plugins
     ---------------------------------------------------------------*/
-  plugins.forEach(({ plugin, options }) => {
-    require(path.join(process.cwd(), plugin)).register(
-      register(options),
-      options
-    );
+  manifest.plugins.forEach(({ plugin, options }) => {
+    resolvePlugin(plugin).register(register(options), options);
   });
 
   return app;
 }
+
+/*################################################################
+  Plugins
+  ################################################################*/
+const resolvePlugin = R.cond([
+  [R.is(Object), R.identity()],
+  [R.is(String), plugin => require(path.join(process.cwd(), plugin))]
+]);

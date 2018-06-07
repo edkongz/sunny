@@ -1,7 +1,6 @@
-import { BadRequest } from './kaboom';
+import { BadRequest, BadImplementation } from './kaboom';
 import * as R from "ramda";
 import * as cors from "cors";
-import * as Boom from "boom";
 import * as bodyParser from "body-parser";
 import { RoutesDefaults, Route } from "./types";
 import { errorHandler } from './errors';
@@ -25,7 +24,6 @@ export const registerFactory = (
     route(route: Route) {
       serverApp[method(route)](
         path(route),
-        ...middleware(route),
         route.handler,
         errorHandler,
       );
@@ -97,7 +95,7 @@ const authFactory = (serverAuth, pluginOptions, serverRoutes) => route => {
   ]);
   if (result === false) return null;
   if (serverAuth[result]) return serverAuth[result];
-  throw Error("Auth method doesn't exist");
+  return BadImplementation()
 };
 
 /*---------------------------------------------------------------
@@ -112,7 +110,6 @@ const validateBody = route => {
       : validator(input);
 
     if (isValid(results)) return next();
-    // throw Boom.badRequest(null, results.error.details)
     return BadRequest({payload: results.error.details})
   };
 };
@@ -129,7 +126,7 @@ const validateQuery = route => {
       ? require("joi").validate(input, validator)
       : validator(input);
     if (isValid(results)) return next();
-    throw Error("SHit went pear shpaed");
+    return BadRequest({payload: results.error.details})
   };
 };
 
@@ -145,7 +142,7 @@ const validateParams = route => {
       ? require("joi").validate(input, validator)
       : validator(input);
     if (isValid(results)) return next();
-    throw Error("SHit went pear shpaed");
+    return BadRequest({payload: results.error.details})
   };
 };
 

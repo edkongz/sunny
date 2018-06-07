@@ -18,45 +18,85 @@ export class Kaboom extends Error {
 /*################################################################
   4xx Errors
   ################################################################*/
-export const BadRequest = ({payload={}, code="BAD_REQUEST"}={}) => {
-  throw new Kaboom(400, "Bad Request", payload, code);
+export const BadRequest = ({
+  payload = {},
+  code = "BAD_REQUEST",
+  message = "Bad request"
+} = {}) => {
+  throw new Kaboom(400, message, payload, code);
 };
 
-export const Unauthorized = ({payload={}, code="UNAUTHORIZED"}={}) => {
-  throw new Kaboom(401, "Unauthorized", payload, code);
-}
+export const Unauthorized = ({
+  payload = {},
+  code = "UNAUTHORIZED",
+  message = "Unauthorized"
+} = {}) => {
+  throw new Kaboom(401, message, payload, code);
+};
 
-export const Forbidden = ({payload={}, code="FORBIDDEN"}={}) => {
-  throw new Kaboom(403, "Forbidden", payload, code);
-}
+export const Forbidden = ({
+  payload = {},
+  code = "FORBIDDEN",
+  message = "Forbidden"
+} = {}) => {
+  throw new Kaboom(403, message, payload, code);
+};
 
-export const NotFound = ({payload={}, code="NOT_FOUND"}={}) => {
-  throw new Kaboom(404, "NotFound", payload, code);
-}
+export const NotFound = ({
+  payload = {},
+  code = "NOT_FOUND",
+  message = "Not found"
+} = {}) => {
+  throw new Kaboom(404, message, payload, code);
+};
 
-export const Conflict = ({payload={}, code="CONFLICT"}) => {
-  throw new Kaboom(409, "Conflict", payload, code);
-}
+export const Conflict = ({
+  payload = {},
+  code = "CONFLICT",
+  message = "Conflict"
+} = {}) => {
+  throw new Kaboom(409, message, payload, code);
+};
 
 /*################################################################
   5xx Errors
   ################################################################*/
-export const BadImplementation = ({payload={}, code="BAD_IMPLEMENTION"}) => {
-  throw new Kaboom(500, "BadImplementation", payload, code);
-}
+export const BadImplementation = ({
+  payload = {},
+  code = "BAD_IMPLEMENTATION",
+  message = "Bad implementation"
+} = {}) => {
+  throw new Kaboom(500, message, payload, code);
+};
 
-export const NotImplemented = ({payload={}, code="NOT_IMPLEMENTED"}) => {
-  throw new Kaboom(501, "NotImplemented", payload, code);
-}
+export const NotImplemented = ({
+  payload = {},
+  code = "NOT_IMPLEMENTED",
+  message = "Not implemented"
+} = {}) => {
+  throw new Kaboom(501, message, payload, code);
+};
 
-export const BadGateway = ({payload={}, code="BAD_GATEWAY"}) => {
-  throw new Kaboom(502, "BadGateway", payload, code);
-}
+export const BadGateway = ({
+  payload = {},
+  code = "BAD_GATEWAY",
+  message = "Bad gateway"
+} = {}) => {
+  throw new Kaboom(502, message, payload, code);
+};
 
-export const ServerUnavailable = ({payload={}, code="SERVER_UNAVAILABLE"}) => {
-  throw new Kaboom(503, "ServerUnavailable", payload, code);
-}
+export const ServerUnavailable = ({
+  payload = {},
+  code = "SERVER_UNAVAILABLE",
+  message = "Server unavailable"
+} = {}) => {
+  throw new Kaboom(503, message, payload, code);
+};
 
-export const GatewayTimeout = ({payload={}, code="GATEWAY_TIMEOUT"}) => {
-  throw new Kaboom(504, "GatewayTimeout", payload, code);
-}
+export const GatewayTimeout = ({
+  payload = {},
+  code = "GATEWAY_TIMEOUT",
+  message = "Gateway timeout"
+} = {}) => {
+  throw new Kaboom(504, message, payload, code);
+};

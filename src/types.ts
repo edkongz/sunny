@@ -69,3 +69,7 @@ export interface Manifest extends Scheme {
     [environment: string]: Partial<Scheme>;
   };
 }
+
+export interface ServerOptions {
+  manifest: Partial<Manifest>
+}
